@@ -1,74 +1,118 @@
-#include <iostream>
-#include<stdio.h>
-#include<math.h>
+#include<iostream>
 #include<string>
+#include<stdio.h>
 #include<string.h>
+#include<stdlib.h>
 #define LOCAL
 
 using namespace std;
 
 
-long long jiami(char ch ,int E , int N){
-    int a = ch;
-    long long b = pow(a,E);
-    b = b%N;
+int qiuD(int e, int m){
+    int last;
+    for(int i = 1; i < m; i++){
+        if((e * i) % m == 1){
+            last = i;
+            break;
+        }
+    }
+    return last;
+}
+
+int ensure(int a, int b){
+    int z = b;
+    while(a % b != 0){
+        z = a % b;
+        a = b;
+        b =z;
+    }
     return b;
 }
 
-char jiemi(int a,int D,int N){
-    long long b = pow(a,D);
-    int c = b%N;
-    char d = b;
-    return d;
+int jiami(char s, int e, int n){
+    int m = s;
+    int t = 1;
+    while(e){
+        t = t * m;
+        t = t % n;
+        e--;
+    }
+    return t;
 }
 
-int main()
-{
-    int p ,q , E, D;
-    cin>>p>>q;
-    int N = p*q;
-    int L = (p-1) * (q-1);
-    for(int i = p; i < L; i++){
-        if(i%(p-1) == 0 && i%(q-1) == 0){
-            L = i;
-            break;
-        }
+char jiemi(int t, int d, int n){
+    int m = 1;
+    while(d){
+        m = m * t;
+        m = m % n;
+        d--;
     }
-    int flag = 0;
+    char a = m;
+    return a;
+}
 
-    for(int i = 2; i < L; i++){
-            for(int j = 2; j <= i; j++){
-                if(i%j == 0 && L%j == 0){
-                    flag = 1;
-                }
-            }
-            if(flag == 0){
-                E = i;
-                break;
-            }
-            flag = 0;
-    }
+int main(){
+    int p, q , N, E, L, D, flag;
 
-    for(int i = 2; i < L; i++){
-        if((E*i)%L == 1){
-            D = i;
-            break;
-        }
+    //p， q为素数且互质
+    cin>>p>>q>>E;
+    N = p * q;
+    L = ( p - 1 ) * ( q - 1 );
+    int l = L;
+    int c = ensure(l, E);
+    if(c != 1){
+        return 1;
     }
+    D = qiuD(E, L);
+    cout<<(42*42*97)%323;
+    cin>>flag;
+
     #ifdef LOCAL
 	freopen("in.txt", "r", stdin);
 	freopen("out.txt", "w", stdout);
     #endif
 
-    string input;
-    while(getline(cin,input)){
-        for(int i = 0; i < input.size(); i++){
-            int t = jiami(input[i], E, N);
-            cout<<t<<" ";
+  // flag为1则为加密
+  if(flag == 1){
+    string test;
+    while(getline(cin,test)){
+        for(int i = 0; i < test.size(); i++){
+            if(test[i] != ' ' && test[i] != '/r'){
+                cout<<jiami(test[i], E, N)<<" ";
+
+            }
         }
     }
-    cout<<endl;
+}
+ //flag 为其他数时则为解密
+  else{
+    string test;
+    int res = 0;
+    while(getline(cin,test)){
+        for(int i = 0; i < test.size(); i++){
+            if(test[i] != ' ' && test[i] != '/r'){
+                    int hhh = test[i];
+                    hhh = hhh - 48;
+                    res = res * 10 + hhh;
+            }
+            else{
+                if(res){
+                    cout<<jiemi(res, D, N);
+                    res = 0;
+                }
+            }
+            if(i == test.size() - 1){
+                    cout<<jiemi(res, D, N);
 
-
+            }
+        }
+    }
+}
     return 0;
+
+
+
+
+
+
 }
